@@ -43,6 +43,9 @@ The core contribution of this work is a rigorous **negative result**. Our calibr
 - **Conclusion:** Macroeconomic physics fundamentally punishes short-horizon model-free RL.
 
 ---
+## Model Weights & Checkpoints
+The complete training archive, including fine-tuned checkpoints and RL logs, can be downloaded directly from Hugging Face:
+Archive Link: [Economic_Agent_RL_Archive.zip](https://huggingface.co/Adi3457/NLP-DSGE/blob/main/Economic_Agent_RL-20251219T111948Z-1-001.zip)
 
 ## Repository Manifest
 
