@@ -1,102 +1,90 @@
-Modeling Semantic Shifts as Economic Shocks 📉🤖
-Grounding Large Language Models in DSGE Simulators for Policy Generation
+Here is the raw `.md` code for your GitHub repository. I have incorporated the authors, the Hugging Face link, the files shown in your screenshot, and the technical findings from your report.
 
-![alt text](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-yellow)
+You can copy this directly into a file named `README.md` in your repository.
 
+```markdown
+# Modeling Semantic Shifts as Economic Shocks
+### Grounding Large Language Models in DSGE Simulators for Policy Generation
 
-![alt text](https://img.shields.io/badge/License-MIT-blue.svg)
+[![Hugging Face Model](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-yellow)](https://huggingface.co/Adi3457/NLP-DSGE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-This repository contains the code and structural models for a research project exploring how Large Language Models (LLMs) can be grounded in the structural laws of macroeconomics. By treating semantic shifts in online discourse as exogenous economic shocks, we attempt to train an LLM-based policy agent using Reinforcement Learning (RL) within a Dynamic Stochastic General Equilibrium (DSGE) simulator.
+## 📌 Overview
+This project investigates whether Large Language Models (LLMs) can be grounded in the structural "physics" of macroeconomics. While LLMs are excellent at analyzing economic narratives, they lack an internal understanding of equilibrium constraints and intertemporal dynamics.
 
-Project Overview
+We bridge this gap by embedding a locally deployed **Qwen-2.5-1.5B** model inside a **Dynamic Stochastic General Equilibrium (DSGE)** simulator. We operationalize semantic shifts in online discourse as exogenous economic shocks and attempt to train the LLM via Reinforcement Learning (RL) to generate stabilizing policy actions.
 
-Current LLMs are statistical models of language, not structural models of reality. They can generate coherent economic prose but lack an internal representation of equilibrium constraints or intertemporal trade-offs.
+## 🏗️ The Grounding Framework
+Inspired by **Embodied AI** in robotics, we replace physical simulators with macroeconomic ones:
+- **Environment:** A Python-native DSGE interface built on the `Snowdrop` framework.
+- **Agent:** Qwen-2.5-1.5B fine-tuned via LoRA.
+- **Input:** Semantic shocks (Temporal Semantic Volatility) extracted from financial text.
+- **Action Space:** Semantic policy descriptors (e.g., "Aggressive Tightening", "Emergency Ease") mapped to numeric structural shocks.
 
-Inspired by Embodied AI (where robots learn physics through simulators), this project uses a DSGE simulator as a "Macro-Gym" to ground an LLM (Qwen-2.5-1.5B) in economic structure.
+## 🧪 Experimental Paradigms
+We conducted a systematic study across three primary RL architectures:
+1. **PPO (Proximal Policy Optimization):** Baseline actor-critic approach. Suffered from reward sparsity and critic instability.
+2. **GRPO-1 (Group Relative Policy Optimization):** Eliminated the critic by using relative ranking of sampled trajectories. Improved numerical stability but failed to accumulate learning.
+3. **GRPO-2 (Crisis-Amplified):** Our advanced formulation using "Sledgehammer" techniques:
+   - **Crisis Amplification:** System initialized in hyperinflation or depression states.
+   - **Persistence:** Policy actions injected with slow decay ($\rho=0.9$).
+   - **Inaction Penalties:** Explicitly penalizing the agent for "holding" during volatile states.
 
-Key Finding: The "Inversion Paradox"
+## 📉 Key Results: The "Inversion Paradox"
+Our research provides a definitive **negative result**. We discovered that the failure of RL in this domain is structural:
+- **Reward Misalignment:** Stabilizing actions in DSGE models often increase quadratic loss in the short-run before providing long-term benefits.
+- **Inversion:** Policy-gradient RL perceives this "stabilizing pain" as negative feedback, causing the agent to learn that "doing nothing" is optimal.
+- **Conclusion:** Model-free RL is fundamentally incompatible with the intertemporal stiffness of macroeconomic systems.
 
-Our research provides a rigorous negative result: Policy-gradient RL (PPO and GRPO) fails to achieve stable grounding in DSGE environments. We identify that DSGE models are "stiff" and equilibrium-restoring; stabilizing actions often cause short-term "pain" (volatility) that standard RL loss functions penalize, leading the agent to learn a policy of total inaction.
+---
 
-Architecture
+## 📂 Repository Structure
 
-The system consists of two tiered modules:
+| File | Description |
+| :--- | :--- |
+| `GRPO-1.ipynb` | Implementation of Group Relative Policy Optimization (Baseline). |
+| `GRPO-2.ipynb` | Enhanced iteration with Crisis Amplification and Semantic Action Mapping. |
+| `LATEX report.pdf` | Full technical paper detailing the research, methodology, and results. |
+| **Model Configs** | **Structural YAML definitions for the DSGE Simulator:** |
+| `model.yaml` | Quarterly Projection Model (QPM) - Standard Central Bank model. |
+| `sw_model.yaml` | Smets-Wouters (2007) model for Business Cycle analysis. |
+| `gsw_model.yaml` | Gali-Smets-Wouters model (COVID/Pandemic labor shocks). |
+| `Ireland2004.yaml` | Ireland (2004) New Keynesian Technology shock model. |
+| `MVF_US.yaml` | Multivariate Filter for US Output Gap estimation. |
+| `RBC.yaml` | Real Business Cycle model for growth-focused simulations. |
 
-Semantic Shift Watchdog: Translates Temporal Semantic Volatility (TSV) from financial discourse into numerical "Semantic Shock" vectors.
+---
 
-DRL Policy Agent: A fine-tuned LLM that observes the economy and generates policy interventions (Monetary/Fiscal shocks) to minimize a quadratic loss function.
+## 🛠️ Installation & Usage
 
-Methodology & Experiments
+### 1. Requirements
+- Python 3.9+
+- [Snowdrop DSGE Framework](https://github.com/SimonHashtag/EconRL)
+- HuggingFace `transformers`, `peft`, and `trl`
 
-We tested three distinct Reinforcement Learning paradigms to bridge the language-to-simulator gap:
+```bash
+pip install torch transformers peft trl pyyaml pandas numpy
+```
 
-PPO (Proximal Policy Optimization): Collapsed to inaction due to critic instability and the "stiffness" of the macroeconomic reward landscape.
-
-GRPO-1 (Group Relative Policy Optimization): Used relative ranking of trajectories to remove the critic. While variance was detected, learning failed to accumulate across epochs.
-
-GRPO-2 (Crisis-Amplified): Our most aggressive formulation.
-
-Semantic Action-Tagging: LLM emits semantic intents (e.g., TIGHTEN, EASE) instead of raw numbers.
-
-Crisis Amplification: Initializing the system in hyperinflation/depression states to force a learning signal.
-
-Inaction Penalties: Explicitly penalizing the agent for doing nothing during crises.
-
-📂 Repository Structure
-File	Description
-GRPO-1.ipynb	Initial implementation of Group Relative Policy Optimization.
-GRPO-2.ipynb	Enhanced iteration with crisis-amplified environments and semantic mapping.
-model.yaml	Base Quarterly Projection Model (QPM) configuration.
-sw_model.yaml	Non-linear Smets-Wouters business cycle model.
-gsw_model.yaml	Gali-Smets-Wouters model (Pandemic/COVID focus).
-Ireland2004.yaml	New Keynesian Tech-shock model.
-MVF_US.yaml	Multivariate Filter for US Output Gap estimation.
-RBC.yaml	Real Business Cycle model for growth-focused simulations.
-LATEX report.pdf	Full technical paper detailing findings and the "Inversion Paradox."
-🛠️ Setup & Installation
-
-Prerequisites:
-
-Python 3.9+
-
-Snowdrop DSGE Framework
-
-PyTorch & HuggingFace Transformers
-
-code
-Bash
-download
-content_copy
-expand_less
-# Clone the repository
-git clone https://github.com/vasudeywos/NLP-DSGE-Grounding.git
-
-# Install dependencies
-pip install torch transformers peft snowdrop-dsge
-Loading the Fine-tuned Model
-
-The policy agent model is hosted on Hugging Face:
-
-code
-Python
-download
-content_copy
-expand_less
+### 2. Accessing the Model
+The fine-tuned policy agent is available on Hugging Face:
+```python
 from transformers import AutoModelForCausalLM, AutoTokenizer
+from peft import PeftModel
 
-model_id = "Adi3457/NLP-DSGE"
-tokenizer = AutoTokenizer.from_pretrained(model_id)
-model = AutoModelForCausalLM.from_pretrained(model_id)
-Key Results from Calibration
+base_model = "Qwen/Qwen2.5-1.5B-Instruct"
+adapter_id = "Adi3457/NLP-DSGE"
 
-Our manual grid search (bypassing the LLM) revealed why RL fails in this domain:
+tokenizer = AutoTokenizer.from_pretrained(base_model)
+model = AutoModelForCausalLM.from_pretrained(base_model)
+model = PeftModel.from_pretrained(model, adapter_id)
+```
 
-Scenario	Policy Action	Reward Result	Interpretation
-Recession	Rate Cut	❌ FAIL	Short-term inflation spikes outweigh long-term output gains in the loss function.
-Stagflation	Rate Hike	✅ PASS	Only works when the objective function is heavily weighted toward "Hawkish" inflation control.
-Cost-Push	Any	❌ FAIL	DSGE short-run dynamics punish nearly all interventions under supply shocks.
+---
 
+## 👥 Authors
+- **Aditya Dubey** - [f20220231@pilani.bits-pilani.ac.in](mailto:f20220231@pilani.bits-pilani.ac.in)
+- **Namah Gupta** - [f20220126@pilani.bits-pilani.ac.in](mailto:f20220126@pilani.bits-pilani.ac.in)
 
-Aditya Dubey - GitHub
-
-Namah Gupta
+```
+```
