@@ -2,7 +2,6 @@
 ### Grounding Large Language Models in DSGE Simulators for Policy Generation and Forecasting
 
 [![Hugging Face Model](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-yellow)](https://huggingface.co/Adi3457/NLP-DSGE)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 ## Intellectual Motivation
 Large Language Models (LLMs) are statistical models of language, not structural models of reality. They can produce linguistically plausible policy recommendations that fail catastrophically when evaluated inside formal macroeconomic systems because they lack an internal representation of equilibrium constraints or intertemporal trade-offs.
